@@ -11,13 +11,12 @@ void sdInitialize() {
   }
 }
 
-void sdListFiles() {
+void sdListFiles(std::function<void(File*)> callback) {
   File root = SD.open("/");
 
   File currentFile = root.openNextFile();
   while (currentFile) {
-    Serial.printf("%s%s\n", currentFile.name(),
-                  currentFile.isDirectory() ? "/" : "");
+    callback(&currentFile);
     currentFile = root.openNextFile();
   }
 }
