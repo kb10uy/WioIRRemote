@@ -11,7 +11,7 @@ void sdInitialize() {
   }
 }
 
-void sdListFiles(std::function<void(File*)> callback) {
+void sdListFiles(void (*callback)(File*)) {
   File root = SD.open("/");
 
   File currentFile = root.openNextFile();

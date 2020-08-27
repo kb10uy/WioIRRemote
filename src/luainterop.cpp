@@ -1,5 +1,7 @@
 #include "luainterop.hpp"
 
+static const char *luaOnRead(lua_State *lua, void *data, size_t *size);
+
 lua_State *lua = nullptr;
 
 void luaReset() {
@@ -15,13 +17,23 @@ int luaLoadFile(File *file) {
   FileBuffer fileBuffer;
   fileBuffer.file = file;
   fileBuffer.readBytes = 0;
-  fileBuffer.size = 0;
+  fileBuffer.size = file->size();
 
   int status = lua_load(lua, luaOnRead, &fileBuffer, file->name(), nullptr);
-  return status == LUA_OK ? lua_pcall(lua, 0, LUA_MULTRET, 0) : status;
+  if (status == LUA_OK) {
+    return lua_pcall(lua, 0, 0, 0);
+  } else {
+    Serial.printf("Lua Error: %s\n", lua_tostring(lua, -1));
+    lua_pop(lua, -1);
+    return status;
+  }
 }
 
-const char *luaOnRead(lua_State *lua, void *data, size_t *size) {
+lua_State *luaGetLuaState() {
+  return lua;
+}
+
+static const char *luaOnRead(lua_State *lua, void *data, size_t *size) {
   FileBuffer *buffer = reinterpret_cast<FileBuffer *>(data);
   if (buffer->readBytes >= buffer->size) {
     *size = 0;
