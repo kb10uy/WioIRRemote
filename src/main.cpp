@@ -3,7 +3,7 @@
 static void onListFile(File *file);
 
 TFT_eSPI display;
-ControlFace controlFace(&display);
+ControlFace controlFace(&display, D0);
 bool foundScript = false;
 
 void setup() {

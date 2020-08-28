@@ -7,7 +7,8 @@ const int WIO_KEYS[8] = {
     WIO_5S_PRESS, WIO_KEY_A,   WIO_KEY_B,   WIO_KEY_C,
 };
 
-ControlFace::ControlFace(TFT_eSPI *display) : display{display} {}
+ControlFace::ControlFace(TFT_eSPI *display, uint32_t pinIR)
+    : display{display}, pinIR{pinIR} {}
 
 /**
  * 全ての状態をリセットする。
@@ -75,7 +76,7 @@ void ControlFace::send() {
   }
 
   // IRSender
-  irPushIRSender(this->lua);
+  irPushIRSender(this->lua, this->pinIR);
 
   // values
   lua_createtable(this->lua, 0, this->itemCount);
@@ -97,7 +98,11 @@ void ControlFace::send() {
     lua_settable(this->lua, -3);
   }
 
-  lua_call(this->lua, 2, 0);
+  Serial.printf("Calling onSend...\n");
+  int status = lua_pcall(this->lua, 2, 0, 0);
+  if (status != LUA_OK) {
+    Serial.printf("Lua Error: %s\n", lua_tostring(lua, -1));
+  }
 }
 
 /**

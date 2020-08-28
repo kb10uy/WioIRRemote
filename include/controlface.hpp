@@ -23,6 +23,7 @@ class ControlFace {
  private:
   lua_State *lua = nullptr;
   TFT_eSPI *display = nullptr;
+  uint32_t pinIR = 0;
   ControlFaceItem items[8];
   size_t itemCount = 0;
   size_t selectedItem = 0;
@@ -32,7 +33,7 @@ class ControlFace {
   void redrawItem(size_t index, bool enabled);
 
  public:
-  ControlFace(TFT_eSPI *display);
+  ControlFace(TFT_eSPI *display, uint32_t pinIR);
   void reset();
   void tick();
   void send();
