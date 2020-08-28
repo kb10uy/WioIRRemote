@@ -85,7 +85,7 @@ void ControlFace::send() {
                    reinterpret_cast<const char *>(this->items[i].getName()));
     switch (this->items[i].getType()) {
       case ControlType::Button:
-        lua_pushinteger(this->lua, i == this->selectedItem ? 1 : 0);
+        lua_pushboolean(this->lua, i == this->selectedItem ? 1 : 0);
         break;
       case ControlType::Select:
         // Lua は 1-based なのでそれを考慮して +1
