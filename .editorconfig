@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 
 [*.{c,h,cpp,hpp}]
 indent_size = 2
+
+[*.lua]
+indent_size = 2
