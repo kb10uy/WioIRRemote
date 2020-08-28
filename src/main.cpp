@@ -4,15 +4,19 @@ static void onListFile(File *file);
 
 TFT_eSPI display;
 ControlFace controlFace(&display);
+bool foundScript = false;
 
 void setup() {
   Serial.begin(115200);
   display.begin();
   display.setRotation(3);
 
-  luaReset();
+  controlFace.reset();
   sdInitialize();
   sdListFiles(onListFile);
+
+  controlFace.dumpMenuItems();
+  controlFace.redrawAll();
 }
 
 void loop() {
@@ -21,26 +25,15 @@ void loop() {
 }
 
 static void onListFile(File *file) {
+  if (foundScript) {
+    return;
+  }
+
   String filename(file->name());
   if (!filename.endsWith(".luo") && !filename.endsWith(".lua")) {
     return;
   }
 
-  int status = luaLoadFile(file);
-  if (status != LUA_OK) {
-    return;
-  }
-
-  lua_State *lua = luaGetLuaState();
-
-  status = lua_getglobal(lua, "getMenu");
-  if (status != LUA_TFUNCTION) {
-    lua_pop(lua, -1);
-    return;
-  }
-  lua_call(lua, 0, 1);
-
-  controlFace.loadItemsFromLuaTable(lua);
-  controlFace.dumpMenuItems();
-  controlFace.redrawAll();
+  controlFace.loadItemsFromLua(file);
+  foundScript = true;
 }

@@ -4,7 +4,6 @@
 #include <TFT_eSPI.h>
 
 #include "controlface.hpp"
-#include "luainterop.hpp"
 #include "sdcard.hpp"
 
 void setup();
