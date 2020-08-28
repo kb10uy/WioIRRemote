@@ -16,6 +16,8 @@ void ControlFaceItem::moveNext() {
           min(this->currentValue + this->range.step, this->range.maximum);
       break;
     }
+    default:
+      break;
   }
 }
 
@@ -34,6 +36,8 @@ void ControlFaceItem::movePrevious() {
           max(this->currentValue - this->range.step, this->range.minimum);
       break;
     }
+    default:
+      break;
   }
 }
 
@@ -184,7 +188,7 @@ void ControlFace::redrawAll() {
   }
 }
 
-void ControlFace::redrawItem(int index, bool enabled) {
+void ControlFace::redrawItem(size_t index, bool enabled) {
   this->display->fillRect(0, index * 24 + 48, 320, 24,
                           enabled ? TFT_BLACK : TFT_WHITE);
   this->display->drawLine(0, index * 24 + 48, 320, index * 24 + 48,

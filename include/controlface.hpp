@@ -59,6 +59,6 @@ class ControlFace {
   void loadItemsFromLuaTable(lua_State *lua);
   void dumpMenuItems();
   void redrawAll();
-  void redrawItem(int index, bool enabled);
+  void redrawItem(size_t index, bool enabled);
   void tick();
 };
