@@ -4,6 +4,8 @@
 
 #include <lua.hpp>
 
+#include "irsender.hpp"
+
 struct FileBuffer {
   File *file;
   size_t readBytes;

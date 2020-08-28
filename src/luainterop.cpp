@@ -11,6 +11,7 @@ void luaReset() {
 
   lua = luaL_newstate();
   luaL_openlibs(lua);
+  irRegister(lua);
 }
 
 int luaLoadFile(File *file) {

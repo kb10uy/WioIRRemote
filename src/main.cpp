@@ -10,13 +10,14 @@ void setup() {
   display.begin();
   display.setRotation(3);
 
-  sdInitialize();
   luaReset();
+  sdInitialize();
+  sdListFiles(onListFile);
 }
 
 void loop() {
-  sdListFiles(onListFile);
-  delay(1000);
+  controlFace.tick();
+  delay(10);
 }
 
 static void onListFile(File *file) {
@@ -41,4 +42,5 @@ static void onListFile(File *file) {
 
   controlFace.loadItemsFromLuaTable(lua);
   controlFace.dumpMenuItems();
+  controlFace.redrawAll();
 }

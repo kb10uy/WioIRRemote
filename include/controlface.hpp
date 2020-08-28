@@ -1,12 +1,12 @@
 #pragma once
 
+#include <Arduino.h>
+
 #include <cstdio>
 #include <cstring>
-
-#include <Arduino.h>
-#include "TFT_eSPI.h"
-
 #include <lua.hpp>
+
+#include "TFT_eSPI.h"
 
 enum class ControlType : uint8_t {
   Select,
@@ -37,6 +37,12 @@ class ControlFaceItem {
   void dump();
   void moveNext();
   void movePrevious();
+  const ControlType getType() { return this->type; }
+  const uint8_t *getName() { return this->name; }
+  const uint16_t getValue() { return this->currentValue; }
+  const uint8_t *getStringValue() {
+    return this->items.buffer + this->items.headIndices[this->currentValue];
+  }
 };
 
 class ControlFace {
@@ -44,10 +50,15 @@ class ControlFace {
   TFT_eSPI *display;
   ControlFaceItem items[8];
   size_t itemCount = 0;
+  size_t selectedItem = 0;
+  bool previousButtons[8];
+  bool triggerButtons[8];
 
  public:
   ControlFace(TFT_eSPI *display);
   void loadItemsFromLuaTable(lua_State *lua);
   void dumpMenuItems();
   void redrawAll();
+  void redrawItem(int index, bool enabled);
+  void tick();
 };
